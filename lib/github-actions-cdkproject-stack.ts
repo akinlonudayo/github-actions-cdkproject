@@ -5,6 +5,7 @@ import * as autoscaling from 'aws-cdk-lib/aws-autoscaling';
 import * as elbv2 from 'aws-cdk-lib/aws-elasticloadbalancingv2';
 import * as rds from 'aws-cdk-lib/aws-rds';
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
+import * as config from '../config.json';
 
 export class GithubActionsCdkprojectStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -13,8 +14,8 @@ export class GithubActionsCdkprojectStack extends cdk.Stack {
     
 
     const vpc = new ec2.Vpc(this, 'DevVpc', {
-      cidr:'10.20.0.0/16',
-      maxAzs: 2,
+      cidr: config.vpcCidr,
+      maxAzs: cdk.Stack.of(this).availabilityZones.length,
       natGateways: 1,
       subnetConfiguration: [
         { name: 'Public', subnetType: ec2.SubnetType.PUBLIC, cidrMask: 24 },
@@ -48,7 +49,7 @@ export class GithubActionsCdkprojectStack extends cdk.Stack {
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
       securityGroups: [dbSG],
       credentials: rds.Credentials.fromSecret(dbSecret),
-      allocatedStorage: 20,
+      allocatedStorage: config.dbStorage,
       multiAz: false,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       deletionProtection: false,
@@ -63,9 +64,9 @@ export class GithubActionsCdkprojectStack extends cdk.Stack {
     const asg = new autoscaling.AutoScalingGroup(this, 'ASG', {
       vpc,
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
-      minCapacity: 1,
-      maxCapacity: 4,
-      desiredCapacity: 2,
+      minCapacity: config.minCapacity,
+      maxCapacity: config.maxCapacity,
+      desiredCapacity: config.desiredCapacity,
       launchTemplate: lt,
     });
 
