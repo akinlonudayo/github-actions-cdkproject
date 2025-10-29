@@ -10,11 +10,16 @@ export class GithubActionsCdkprojectStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const vpc = ec2.Vpc.fromVpcAttributes(this, 'myVPC', {
-      vpcId: 'vpc-053b9ebca1c4699e6',
-      availabilityZones: ['ca-central-1a', 'ca-central-1b'],
-      publicSubnetIds: ['subnet-00c87def2b5adf2e8', 'subnet-0c74e4a72c1c8a995'],
-      privateSubnetIds: ['subnet-06f2aaf01e87f3a08', 'subnet-0a4e64872d8211fef'],
+    
+
+    const vpc = new ec2.Vpc(this, 'DevVpc', {
+      cidr:'10.20.0.0/16',
+      maxAzs: 2,
+      natGateways: 1,
+      subnetConfiguration: [
+        { name: 'Public', subnetType: ec2.SubnetType.PUBLIC, cidrMask: 24 },
+        { name: 'Private', subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS, cidrMask: 24 }
+      ]
     });
 
     const albSG = new ec2.SecurityGroup(this, 'ALBSG', { vpc, allowAllOutbound: true });
