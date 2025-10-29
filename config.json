@@ -1,10 +1,32 @@
 {
-    "vpcCidr": "10.20.0.0/16",
-    "instanceType": "t3.micro",
-    "desiredCapacity": 2,
-    "minCapacity": 1,
-    "maxCapacity": 4,
-    "dbEngine": "postgres",
-    "dbStorage": 20,
-    "dbInstanceType": "db.t2.micro"
+    "dev": {
+        "vpcCidr": "10.20.0.0/16",
+        "instanceType": "t3.micro",
+        "desiredCapacity": 2,
+        "minCapacity": 1,
+        "maxCapacity": 4,
+        "dbEngine": "postgres",
+        "dbStorage": 20,
+        "dbInstanceType": "db.t2.micro"
+    },
+    "test": {
+        "vpcCidr": "10.20.0.0/16",
+        "instanceType": "t3.micro",
+        "desiredCapacity": 2,
+        "minCapacity": 1,
+        "maxCapacity": 4,
+        "dbEngine": "postgres",
+        "dbStorage": 20,
+        "dbInstanceType": "db.t2.micro"
+    },
+    "prod": {
+        "vpcCidr": "10.20.0.0/16",
+        "instanceType": "t3.micro",
+        "desiredCapacity": 2,
+        "minCapacity": 1,
+        "maxCapacity": 4,
+        "dbEngine": "postgres",
+        "dbStorage": 20,
+        "dbInstanceType": "db.t2.micro"
+    }    
 }

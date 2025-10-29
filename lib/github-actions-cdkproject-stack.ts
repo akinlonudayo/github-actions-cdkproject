@@ -10,11 +10,12 @@ import * as config from '../config.json';
 export class GithubActionsCdkprojectStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
-
+    const envName = process.env.DEPLOY_ENV || 'dev';
+    const envConfig = (config as any)[envName];
     
 
     const vpc = new ec2.Vpc(this, 'DevVpc', {
-      cidr: config.vpcCidr,
+      cidr: envConfig.vpcCidr,
       maxAzs: cdk.Stack.of(this).availabilityZones.length,
       natGateways: 1,
       subnetConfiguration: [
@@ -49,7 +50,7 @@ export class GithubActionsCdkprojectStack extends cdk.Stack {
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
       securityGroups: [dbSG],
       credentials: rds.Credentials.fromSecret(dbSecret),
-      allocatedStorage: config.dbStorage,
+      allocatedStorage: envConfig.dbStorage,
       multiAz: false,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       deletionProtection: false,
@@ -64,9 +65,9 @@ export class GithubActionsCdkprojectStack extends cdk.Stack {
     const asg = new autoscaling.AutoScalingGroup(this, 'ASG', {
       vpc,
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
-      minCapacity: config.minCapacity,
-      maxCapacity: config.maxCapacity,
-      desiredCapacity: config.desiredCapacity,
+      minCapacity: envConfig.minCapacity,
+      maxCapacity: envConfig.maxCapacity,
+      desiredCapacity: envConfig.desiredCapacity,
       launchTemplate: lt,
     });
 
