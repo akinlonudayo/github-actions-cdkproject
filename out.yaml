@@ -1,0 +1,604 @@
+Resources:
+  DevVpc4A77049E:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.20.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: GithubActionsCdkprojectStack/DevVpc
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/Resource
+  DevVpcPublicSubnet1SubnetEE0C1CEE:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: ca-central-1a
+      CidrBlock: 10.20.0.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: Public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: Name
+          Value: GithubActionsCdkprojectStack/DevVpc/PublicSubnet1
+      VpcId:
+        Ref: DevVpc4A77049E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PublicSubnet1/Subnet
+  DevVpcPublicSubnet1RouteTable99FD27C2:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: GithubActionsCdkprojectStack/DevVpc/PublicSubnet1
+      VpcId:
+        Ref: DevVpc4A77049E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PublicSubnet1/RouteTable
+  DevVpcPublicSubnet1RouteTableAssociation4CA0423C:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: DevVpcPublicSubnet1RouteTable99FD27C2
+      SubnetId:
+        Ref: DevVpcPublicSubnet1SubnetEE0C1CEE
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PublicSubnet1/RouteTableAssociation
+  DevVpcPublicSubnet1DefaultRoute5E9A22DE:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: DevVpcIGW3218FFE5
+      RouteTableId:
+        Ref: DevVpcPublicSubnet1RouteTable99FD27C2
+    DependsOn:
+      - DevVpcVPCGWDC170415
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PublicSubnet1/DefaultRoute
+  DevVpcPublicSubnet1EIPBE07047E:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: GithubActionsCdkprojectStack/DevVpc/PublicSubnet1
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PublicSubnet1/EIP
+  DevVpcPublicSubnet1NATGatewayAD18A49F:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+          - DevVpcPublicSubnet1EIPBE07047E
+          - AllocationId
+      SubnetId:
+        Ref: DevVpcPublicSubnet1SubnetEE0C1CEE
+      Tags:
+        - Key: Name
+          Value: GithubActionsCdkprojectStack/DevVpc/PublicSubnet1
+    DependsOn:
+      - DevVpcPublicSubnet1DefaultRoute5E9A22DE
+      - DevVpcPublicSubnet1RouteTableAssociation4CA0423C
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PublicSubnet1/NATGateway
+  DevVpcPublicSubnet2SubnetBDE7F6FC:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: ca-central-1b
+      CidrBlock: 10.20.1.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: Public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: Name
+          Value: GithubActionsCdkprojectStack/DevVpc/PublicSubnet2
+      VpcId:
+        Ref: DevVpc4A77049E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PublicSubnet2/Subnet
+  DevVpcPublicSubnet2RouteTableA6D907E8:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: GithubActionsCdkprojectStack/DevVpc/PublicSubnet2
+      VpcId:
+        Ref: DevVpc4A77049E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PublicSubnet2/RouteTable
+  DevVpcPublicSubnet2RouteTableAssociation7661DFE0:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: DevVpcPublicSubnet2RouteTableA6D907E8
+      SubnetId:
+        Ref: DevVpcPublicSubnet2SubnetBDE7F6FC
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PublicSubnet2/RouteTableAssociation
+  DevVpcPublicSubnet2DefaultRoute60BC532E:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: DevVpcIGW3218FFE5
+      RouteTableId:
+        Ref: DevVpcPublicSubnet2RouteTableA6D907E8
+    DependsOn:
+      - DevVpcVPCGWDC170415
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PublicSubnet2/DefaultRoute
+  DevVpcPrivateSubnet1Subnet39835D40:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: ca-central-1a
+      CidrBlock: 10.20.2.0/24
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: Private
+        - Key: aws-cdk:subnet-type
+          Value: Private
+        - Key: Name
+          Value: GithubActionsCdkprojectStack/DevVpc/PrivateSubnet1
+      VpcId:
+        Ref: DevVpc4A77049E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PrivateSubnet1/Subnet
+  DevVpcPrivateSubnet1RouteTableDDD28B1B:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: GithubActionsCdkprojectStack/DevVpc/PrivateSubnet1
+      VpcId:
+        Ref: DevVpc4A77049E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PrivateSubnet1/RouteTable
+  DevVpcPrivateSubnet1RouteTableAssociationB9FAB66F:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: DevVpcPrivateSubnet1RouteTableDDD28B1B
+      SubnetId:
+        Ref: DevVpcPrivateSubnet1Subnet39835D40
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PrivateSubnet1/RouteTableAssociation
+  DevVpcPrivateSubnet1DefaultRouteA36A5894:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: DevVpcPublicSubnet1NATGatewayAD18A49F
+      RouteTableId:
+        Ref: DevVpcPrivateSubnet1RouteTableDDD28B1B
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PrivateSubnet1/DefaultRoute
+  DevVpcPrivateSubnet2Subnet5D76EE5E:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: ca-central-1b
+      CidrBlock: 10.20.3.0/24
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: Private
+        - Key: aws-cdk:subnet-type
+          Value: Private
+        - Key: Name
+          Value: GithubActionsCdkprojectStack/DevVpc/PrivateSubnet2
+      VpcId:
+        Ref: DevVpc4A77049E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PrivateSubnet2/Subnet
+  DevVpcPrivateSubnet2RouteTableB4110C0A:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: GithubActionsCdkprojectStack/DevVpc/PrivateSubnet2
+      VpcId:
+        Ref: DevVpc4A77049E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PrivateSubnet2/RouteTable
+  DevVpcPrivateSubnet2RouteTableAssociationA740E7AE:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: DevVpcPrivateSubnet2RouteTableB4110C0A
+      SubnetId:
+        Ref: DevVpcPrivateSubnet2Subnet5D76EE5E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PrivateSubnet2/RouteTableAssociation
+  DevVpcPrivateSubnet2DefaultRoute8C5BF3AC:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: DevVpcPublicSubnet1NATGatewayAD18A49F
+      RouteTableId:
+        Ref: DevVpcPrivateSubnet2RouteTableB4110C0A
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/PrivateSubnet2/DefaultRoute
+  DevVpcIGW3218FFE5:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: GithubActionsCdkprojectStack/DevVpc
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/IGW
+  DevVpcVPCGWDC170415:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId:
+        Ref: DevVpcIGW3218FFE5
+      VpcId:
+        Ref: DevVpc4A77049E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/VPCGW
+  DevVpcRestrictDefaultSecurityGroupCustomResource38EEDCE6:
+    Type: Custom::VpcRestrictDefaultSG
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E
+          - Arn
+      DefaultSecurityGroupId:
+        Fn::GetAtt:
+          - DevVpc4A77049E
+          - DefaultSecurityGroup
+      Account: "409263326615"
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DevVpc/RestrictDefaultSecurityGroupCustomResource/Default
+  CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+      ManagedPolicyArns:
+        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: Inline
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:AuthorizeSecurityGroupIngress
+                  - ec2:AuthorizeSecurityGroupEgress
+                  - ec2:RevokeSecurityGroupIngress
+                  - ec2:RevokeSecurityGroupEgress
+                Resource:
+                  - Fn::Join:
+                      - ""
+                      - - arn:aws:ec2:ca-central-1:409263326615:security-group/
+                        - Fn::GetAtt:
+                            - DevVpc4A77049E
+                            - DefaultSecurityGroup
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role
+  CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: cdk-hnb659fds-assets-409263326615-ca-central-1
+        S3Key: 7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200.zip
+      Timeout: 900
+      MemorySize: 128
+      Handler: __entrypoint__.handler
+      Role:
+        Fn::GetAtt:
+          - CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0
+          - Arn
+      Runtime: nodejs22.x
+      Description: Lambda function for removing all inbound/outbound rules from the VPC default security group
+    DependsOn:
+      - CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler
+      aws:asset:path: asset.7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200
+      aws:asset:property: Code
+  ALBSGB173E466:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: GithubActionsCdkprojectStack/ALBSG
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow HTTP
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80
+        - CidrIp: 0.0.0.0/0
+          Description: Allow HTTPS
+          FromPort: 443
+          IpProtocol: tcp
+          ToPort: 443
+      VpcId:
+        Ref: DevVpc4A77049E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/ALBSG/Resource
+  EC2SG244E8056:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: GithubActionsCdkprojectStack/EC2SG
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      VpcId:
+        Ref: DevVpc4A77049E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/EC2SG/Resource
+  EC2SGfromGithubActionsCdkprojectStackALBSGFE4DE1F880E4A4E5FC:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Allow from ALB
+      FromPort: 80
+      GroupId:
+        Fn::GetAtt:
+          - EC2SG244E8056
+          - GroupId
+      IpProtocol: tcp
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - ALBSGB173E466
+          - GroupId
+      ToPort: 80
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/EC2SG/from GithubActionsCdkprojectStackALBSGFE4DE1F8:80
+  EC2SGfromGithubActionsCdkprojectStackALBSGFE4DE1F84436F7652F3:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Allow from ALB
+      FromPort: 443
+      GroupId:
+        Fn::GetAtt:
+          - EC2SG244E8056
+          - GroupId
+      IpProtocol: tcp
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - ALBSGB173E466
+          - GroupId
+      ToPort: 443
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/EC2SG/from GithubActionsCdkprojectStackALBSGFE4DE1F8:443
+  DBSG9487F3EF:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: GithubActionsCdkprojectStack/DBSG
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      VpcId:
+        Ref: DevVpc4A77049E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DBSG/Resource
+  DBSGfromGithubActionsCdkprojectStackEC2SGC75F136E54329CCD981F:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Allow PostgreSQL from EC2
+      FromPort: 5432
+      GroupId:
+        Fn::GetAtt:
+          - DBSG9487F3EF
+          - GroupId
+      IpProtocol: tcp
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - EC2SG244E8056
+          - GroupId
+      ToPort: 5432
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DBSG/from GithubActionsCdkprojectStackEC2SGC75F136E:5432
+  DBSecretD58955BC:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      GenerateSecretString:
+        ExcludeCharacters: '/@" '
+        GenerateStringKey: password
+        SecretStringTemplate: '{"username":"dbadmin"}'
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DBSecret/Resource
+  DBSecretAttachmentC565A14F:
+    Type: AWS::SecretsManager::SecretTargetAttachment
+    Properties:
+      SecretId:
+        Ref: DBSecretD58955BC
+      TargetId:
+        Ref: PostgresRDS47892308
+      TargetType: AWS::RDS::DBInstance
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/DBSecret/Attachment/Resource
+  PostgresRDSSubnetGroupA0E6AA8D:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnet group for PostgresRDS database
+      SubnetIds:
+        - Ref: DevVpcPrivateSubnet1Subnet39835D40
+        - Ref: DevVpcPrivateSubnet2Subnet5D76EE5E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/PostgresRDS/SubnetGroup/Default
+  PostgresRDS47892308:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: "20"
+      CopyTagsToSnapshot: true
+      DBInstanceClass: db.t3.micro
+      DBSubnetGroupName:
+        Ref: PostgresRDSSubnetGroupA0E6AA8D
+      DeletionProtection: false
+      Engine: postgres
+      EngineVersion: "15"
+      MasterUserPassword:
+        Fn::Join:
+          - ""
+          - - "{{resolve:secretsmanager:"
+            - Ref: DBSecretD58955BC
+            - :SecretString:password::}}
+      MasterUsername:
+        Fn::Join:
+          - ""
+          - - "{{resolve:secretsmanager:"
+            - Ref: DBSecretD58955BC
+            - :SecretString:username::}}
+      MultiAZ: false
+      PubliclyAccessible: false
+      StorageType: gp2
+      VPCSecurityGroups:
+        - Fn::GetAtt:
+            - DBSG9487F3EF
+            - GroupId
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/PostgresRDS/Resource
+  EC2LaunchTemplate1203533F:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId:
+          Ref: SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter
+        InstanceType: t3.micro
+        SecurityGroupIds:
+          - Fn::GetAtt:
+              - EC2SG244E8056
+              - GroupId
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+              - Key: Name
+                Value: GithubActionsCdkprojectStack/EC2LaunchTemplate
+          - ResourceType: volume
+            Tags:
+              - Key: Name
+                Value: GithubActionsCdkprojectStack/EC2LaunchTemplate
+        UserData:
+          Fn::Base64: "#!/bin/bash"
+      TagSpecifications:
+        - ResourceType: launch-template
+          Tags:
+            - Key: Name
+              Value: GithubActionsCdkprojectStack/EC2LaunchTemplate
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/EC2LaunchTemplate/Resource
+  ASG46ED3070:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      DesiredCapacity: "2"
+      LaunchTemplate:
+        LaunchTemplateId:
+          Ref: EC2LaunchTemplate1203533F
+        Version:
+          Fn::GetAtt:
+            - EC2LaunchTemplate1203533F
+            - LatestVersionNumber
+      MaxSize: "4"
+      MinSize: "1"
+      TargetGroupARNs:
+        - Ref: ALBListenerTargetGroupD5D64FBA
+      VPCZoneIdentifier:
+        - Ref: DevVpcPrivateSubnet1Subnet39835D40
+        - Ref: DevVpcPrivateSubnet2Subnet5D76EE5E
+    UpdatePolicy:
+      AutoScalingScheduledAction:
+        IgnoreUnmodifiedGroupSizeProperties: true
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/ASG/ASG
+  ALBAEE750D2:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      LoadBalancerAttributes:
+        - Key: deletion_protection.enabled
+          Value: "false"
+      Scheme: internet-facing
+      SecurityGroups:
+        - Fn::GetAtt:
+            - ALBSGB173E466
+            - GroupId
+      Subnets:
+        - Ref: DevVpcPublicSubnet1SubnetEE0C1CEE
+        - Ref: DevVpcPublicSubnet2SubnetBDE7F6FC
+      Type: application
+    DependsOn:
+      - DevVpcPublicSubnet1DefaultRoute5E9A22DE
+      - DevVpcPublicSubnet1RouteTableAssociation4CA0423C
+      - DevVpcPublicSubnet2DefaultRoute60BC532E
+      - DevVpcPublicSubnet2RouteTableAssociation7661DFE0
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/ALB/Resource
+  ALBListener3B99FF85:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn:
+            Ref: ALBListenerTargetGroupD5D64FBA
+          Type: forward
+      LoadBalancerArn:
+        Ref: ALBAEE750D2
+      Port: 80
+      Protocol: HTTP
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/ALB/Listener/Resource
+  ALBListenerTargetGroupD5D64FBA:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Port: 80
+      Protocol: HTTP
+      TargetGroupAttributes:
+        - Key: stickiness.enabled
+          Value: "false"
+      TargetType: instance
+      VpcId:
+        Ref: DevVpc4A77049E
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/ALB/Listener/TargetGroup/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAA/81WwW7jNhD9luVxwaipge4hN8e7XRjdNkac5lAhKMbkRGFCkSo5dOIV9O8FKUqWnaDYdnvwSeKQ8/g4fHzkrJj9+FNx/g6e/ZmQT2dabYp2TSCeODz7P1sUs6K9bUTZMqGkYxfsPeOshpf5V58bBugzED7Dboj4sDFIC2vuVRUckLKGXZQtM1DjwZCbXRMDq7DRSjCepvgV/FMa1PF/yHBqC4SvUu66O764N7erBe9B1ymrbBlsQWnYKK1o94c1A+q2EUuZ/yPUpbbiaVxl04MsmyvzBYIRD+yCXEDOVLP9sDgaDt6ryiyb7Ye5lA69vzILh3n1eT0nwSIRkfK3cd/YRcnes7uTIXgaLHop9QKKf9c2EN7ARuM+vo/NvbdCJYBxcPz5tFzFz77YPGv3f1fmPWh/AjX/Phqnw+REaPQqXBpCZ3DUUO9xuTUnAvFQoyG+RhGcot1nZ0NTtpHsMJXW9nmu9VWgjQ1G9ocjW8HSVHH266AxGbUAszRaGewj/TES1hgUkdvg88GovwLmaqTNG23k9DF52pcB+dMUOPbmQREyjflPldwDvb2Cb++fsP1uJr2vTZXyKpCTea/hG6wbDYRly5TxBEZgvod70YsHZXBZQzXe1VOsfDPHOQ7hOu5ROCRfg4EKXdGuU7tsWYUGXTTJFFiTU6ZiFy3zk/YAk+fEF6GDxMUDOBCEbtj8ESol/YK7ns9YBYfp2DikG3AV0v40lcN8GYlS/2Q5b6d13ElftB+BYAMel7liZcvQVCr6yPA3KaJXptL4u0d3bSkZwLxptBJ7L+A56RadT7GW3Qetx2bei0frpqGOswYc1Ejo0m78DLXSuwPEg5DEewiaIpPx8dXxt/Z9r8Ntk99ZPu3RWw+17kgUPr85OBMOJRpSoP1E1gII5Zqs24uqDprU/OtoqA5ruwW9slqJyF6iJ2d3aQ0aY91WzlLvBDmpu+M90cEfJXrhVDMp8r9d1TGLQRsfLycz9YFBCR2HQNYL0MpURTsPZNd947VtfxuJWpkFNCAU7UYhvBxFJHrlUB5F9cGJ3N99Sc03diLCXub5RJd7Izmm33HU4EkJbUFuQIMRylTbWdFOwL5YkJepD13ypqSF6BCTDj5NUJ7iQR4G84Ok3MnfphuHTJpdx6/R2+AElnd8ETzZegwMkEPgqH/l7FZJdJfgkc+9j14ElTJVzFkNBy02rgI1gTpurMTi0f+wnc2K2Xlx/u7RK3XmgiFVY3Hdf/8GSrkuWIYNAAA=
+    Metadata:
+      aws:cdk:path: GithubActionsCdkprojectStack/CDKMetadata/Default
+Parameters:
+  SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+Outputs:
+  DBSecretArn:
+    Value:
+      Ref: DBSecretD58955BC
+  DBEndpoint:
+    Value:
+      Fn::GetAtt:
+        - PostgresRDS47892308
+        - Endpoint.Address
+  ALBEndpoint:
+    Value:
+      Fn::GetAtt:
+        - ALBAEE750D2
+        - DNSName
+
